@@ -1,6 +1,6 @@
 # SNAKE-GAME
 
-🔗 [Clique aqui para acessar](https:)
+🔗 [Clique aqui para acessar](https://anahaubert.github.io/SNAKE-GAME/)
 
 ## 🛠️ Tecnologias
 
