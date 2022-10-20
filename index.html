@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake Game</title>
+</head>
+
+<body>
+    <canvas id="stage" width="600" height="600">
+    </canvas>
+
+    <script type="text/javascript">
+
+        window.onload = function() {
+            let stage = document.getElementById('stage');
+            let context = stage.getContext('2d');
+            document.addEventListener('keydown', keyPush);
+
+            setInterval(game, 80);
+
+            const velocidade = 1;
+            
+            let velocidadeX = velocidadeY = 0;
+            let pontoX = 10;
+            let pontoY = 15;
+
+            let tamanhoCelula = 30 //quadradinhos da tela
+            let quantidadeCelulas = 20
+            let appleX = appleY = 15; //posição inicial da maçã
+
+            let rastro = [];
+            let calda = 5;
+
+            function game() {
+                pontoX += velocidadeX;
+                pontoY += velocidadeY;
+
+                //movimento no eixo x
+                if (pontoX < 0) {
+                    pontoX = quantidadeCelulas - 1;
+                }
+
+                if (pontoX > quantidadeCelulas - 1) {
+                    pontoX = 0;
+                }
+                //movimento no eixo y
+                if (pontoY < 0) {
+                    pontoY = quantidadeCelulas - 1;
+                }
+
+                if (pontoY > quantidadeCelulas - 1) {
+                    pontoY = 0;
+                }
+
+                //background
+                context.fillStyle = 'black';
+                context.fillRect(0,0, stage.width, stage.height);
+
+                //maçã
+                context.fillStyle = 'red';
+                context.fillRect(appleX*tamanhoCelula, appleY*tamanhoCelula, tamanhoCelula, tamanhoCelula);
+
+                //cobra
+                context.fillStyle = 'gray';
+                for (let i = 0; i < rastro.length; i++) {
+                    context.fillRect(rastro[i].x*tamanhoCelula, rastro[i].y*tamanhoCelula, tamanhoCelula-1, tamanhoCelula-1);
+                    //se bater na calda
+                    if (rastro[i].x == pontoX && rastro[i].y == pontoY) {
+                        velocidadeX = velocidadeY = 0;
+                        calda = 5;
+                    }
+                }
+
+                //adiciona elemento ao rastro
+                rastro.push({x:pontoX, y:pontoY});
+                //remove o primeiro elemento do array, se ele for maior do que a calda
+                while (rastro.length > calda) {
+                    rastro.shift(); 
+                }
+                //quando encostra na maçã, acrescenta um elemento a calda, e coloca a maçã em outra celula
+                if (appleX == pontoX && appleY == pontoY) {
+                    calda++;
+                    appleX = Math.floor(Math.random()*quantidadeCelulas);
+                    appleY = Math.floor(Math.random()*quantidadeCelulas);
+                }
+            }
+
+            function keyPush(event) {
+                switch(event.keyCode) {
+                    case 37://left
+                        velocidadeX = -velocidade;
+                        velocidadeY = 0;
+                        break;
+                    case 38://up
+                        velocidadeX = 0;
+                        velocidadeY = -velocidade;
+                        break;
+                    case 39://right
+                        velocidadeX = velocidade;
+                        velocidadeY = 0;
+                        break;
+                    case 40://down
+                        velocidadeX = 0;
+                        velocidadeY = velocidade;
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+        }
+
+    </script>
+</body>
+
+</html>
